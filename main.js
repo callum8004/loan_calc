@@ -26,6 +26,13 @@ var LoanTable = React.createClass({
       })
       return (
         <table className="table loan_table">
+          <thead>
+            <tr>
+              <th>Balance</th>
+              <th>Interest Rate</th>
+              <th>Minimum Payment</th>
+            </tr>
+          </thead>
           <tbody>
             {loanNodes}
           </tbody>
@@ -82,9 +89,6 @@ var InputtableLoanList = React.createClass({
     }
 })
 
-var loans = [
-  {balance: 100, interest_rate: 6.5, min_payment: 20}
-]
 ReactDOM.render(
   <InputtableLoanList/>,
   document.getElementById('content')
