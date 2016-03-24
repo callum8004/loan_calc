@@ -1,6 +1,7 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var LocalStorageMixin = require('react-localstorage');
+var _ = require('lodash')
 
 var Loan = React.createClass({
   render: function() {
@@ -110,6 +111,7 @@ var PlanHeaders = React.createClass({
 
 var PlanRows = React.createClass({
   calculatePayments: function(loans, payment) {
+    var loans = _.cloneDeep(loans)
     var period = 0;
     var periods = [];
     do {
@@ -118,9 +120,10 @@ var PlanRows = React.createClass({
       var sanity=100
       var total_balance
       do {
+        new_payoffs = false
         // Calculate our distribution of the payment
         var total_min = loans.reduce(function(sum, cur) {
-          return sum + ((cur.balance > 0 && !cur.paid) ? 0 : cur.min_payment)
+          return sum + ((cur.balance > 0 && !cur.paid) ? cur.min_payment : 0)
         }, 0)
         loans.forEach(function(loan) {
           if(loan.balance) {
@@ -142,12 +145,14 @@ var PlanRows = React.createClass({
         sanity--
       } while(new_payoffs && sanity)
 
+      loans.forEach(function(loan) { loan.balance -= loan.cur_payment })
+
       periods.push({
         name: 'Period ' + period,
         loans: loans.map(function(loan) {
           return {
             payment: loan.cur_payment,
-            balance: loan.balance - loan.cur_payment
+            balance: loan.balance
           }
         })
       })

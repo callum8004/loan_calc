@@ -2,6 +2,7 @@
   "name": "LoanCalc",
   "description": "A calculator for multiple loan repayment",
   "dependencies": {
+    "lodash": "^4.6.1",
     "react": "^0.14.7",
     "react-dom": "^0.14.7",
     "react-localstorage": "^0.2.9"
