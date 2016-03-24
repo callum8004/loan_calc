@@ -6,6 +6,7 @@ var Loan = React.createClass({
   render: function() {
     return (
       <tr>
+        <td>{this.props.name}</td>
         <td>{this.props.balance}</td>
         <td>{this.props.interest_rate}</td>
         <td>{this.props.min_payment}</td>
@@ -19,6 +20,7 @@ var LoanTable = React.createClass({
     var loanNodes = this.props.loans.map(function(loan) {
       return (
         <Loan
+          name={loan.name}
           balance={loan.balance}
           interest_rate={loan.interest_rate}
           min_payment={loan.min_payment}
@@ -29,6 +31,7 @@ var LoanTable = React.createClass({
       <table className="table loan_table">
         <thead>
           <tr>
+            <th>Name</th>
             <th>Balance</th>
             <th>Interest Rate</th>
             <th>Minimum Payment</th>
@@ -49,9 +52,10 @@ var CSVInput = React.createClass({
     lines.forEach(function(line) {
       vals = line.split(',')
       loans.push({
-        balance: vals[0],
-        interest_rate: vals[1],
-        min_payment: vals[2],
+        name: vals[0],
+        balance: vals[1],
+        interest_rate: vals[2],
+        min_payment: vals[3],
       })
     })
 
