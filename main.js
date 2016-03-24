@@ -68,6 +68,85 @@ var CSVInput = React.createClass({
   }
 })
 
+var PlanGenerator = React.createClass({
+  getInitialState: function() {
+    return {
+      payment: 0,
+    }
+  },
+  updatePayment: function(e) {
+    this.setState({payment: e.target.value})
+  },
+  render: function() {
+    return (
+      <div>
+        <input type="text" value={this.state.payment} onChange={this.updatePayment}/>
+        <table>
+          <PlanHeaders loans={this.props.loans}/>
+          <PlanRows loans={this.props.loans} payment={this.state.payment}/>
+        </table>
+      </div>
+    )
+  }
+})
+
+var PlanHeaders = React.createClass({
+  render: function() {
+    var loanNames = this.props.loans.map(function(loan) {
+      return (
+        <th>{loan.name}</th>
+      )
+    })
+    return (
+      <thead>
+        <tr>
+          <th>Month</th>
+          {loanNames}
+        </tr>
+      </thead>
+    )
+  }
+})
+
+var PlanRows = React.createClass({
+  calculatePayments: function(loans, payment) {
+    //Dummy rows for now
+    periods = []
+    for(i=0; i<5; i++) {
+      periods.push({
+        name: 'Period ' + i,
+        loans: loans.map(function(loan) {
+          return {
+            'principal': loan.min_payment*0.9,
+            'interest': loan.min_payment*0.1,
+          }
+        })
+      })
+    }
+    return periods
+  },
+  render: function() {
+    var loanPayments = this.calculatePayments(this.props.loans, this.props.payment).map(function(period) {
+      var payments = period.loans.map(function(loan) {
+        return (
+          <td>{loan.principal}/{loan.interest}</td>
+        )
+      })
+      return (
+        <tr>
+          <th>{period.name}</th>
+          {payments}
+        </tr>
+      )
+    })
+    return (
+      <tbody>
+        {loanPayments}
+      </tbody>
+    )
+  }
+})
+
 var InputtableLoanList = React.createClass({
   mixins: [LocalStorageMixin],
 
@@ -91,6 +170,7 @@ var InputtableLoanList = React.createClass({
       <div>
         <CSVInput onLoanData={this.setLoanData}/>
         <LoanTable loans={this.state.loans}/>
+        <PlanGenerator loans={this.state.loans}/>
       </div>
     )
   }
