@@ -35,11 +35,48 @@ var LoanTable = React.createClass({
 })
 
 var CSVInput = React.createClass({
+    handleCSVChange: function(e) {
+      var lines = e.target.value.split("\n")
+      var loans = []
+      lines.forEach(function(line) {
+        vals = line.split(',')
+        loans.push({
+          balance: vals[0],
+          interest_rate: vals[1],
+          min_payment: vals[2],
+        })
+      })
+
+      this.props.onLoanData(loans)
+    },
+    render: function() {
+      return (
+        <textarea placeholder="Paste CSV data here" onChange={this.handleCSVChange}></textarea>
+      )
+    }
+})
+
+var InputtableLoanList = React.createClass({
+    getInitialState: function() {
+      return {
+        loans: []
+      }
+    },
+    componentDidMount: function() {
+      if(stored_state = localStorage.getItem("loan_state")) {
+        if(parsed_state = JSON.parse(localStorage.getItem("loan_state"))) {
+          this.setState(parsed_state)
+        }
+      }
+    },
+    setLoanData: function(loan_data) {
+      this.setState({loans: loan_data})
+    },
     render: function() {
       return (
         <div>
-          <input type="textbox"/>
-          <button className="btn">Add loans</button>
+          <CSVInput onLoanData={this.setLoanData}/>
+          <LoanTable loans={this.state.loans}/>
         </div>
       )
     }
@@ -49,6 +86,6 @@ var loans = [
   {balance: 100, interest_rate: 6.5, min_payment: 20}
 ]
 ReactDOM.render(
-  <LoanTable loans={loans}/>,
+  <InputtableLoanList/>,
   document.getElementById('content')
 )
