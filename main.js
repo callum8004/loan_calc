@@ -53,9 +53,9 @@ var CSVInput = React.createClass({
       vals = line.split(',')
       loans.push({
         name: vals[0],
-        balance: vals[1],
-        interest_rate: vals[2],
-        min_payment: vals[3],
+        balance: parseFloat(vals[1]),
+        interest_rate: parseFloat(vals[2]),
+        min_payment: parseFloat(vals[3]),
       })
     })
 
@@ -110,26 +110,64 @@ var PlanHeaders = React.createClass({
 
 var PlanRows = React.createClass({
   calculatePayments: function(loans, payment) {
-    //Dummy rows for now
-    periods = []
-    for(i=0; i<5; i++) {
+    var period = 0;
+    var periods = [];
+    do {
+      var regular_payment = parseFloat(payment)
+      var new_payoffs
+      var sanity=100
+      var total_balance
+      do {
+        // Calculate our distribution of the payment
+        var total_min = loans.reduce(function(sum, cur) {
+          return sum + ((cur.balance > 0 && !cur.paid) ? 0 : cur.min_payment)
+        }, 0)
+        loans.forEach(function(loan) {
+          if(loan.balance) {
+            loan.cur_payment = (loan.min_payment/total_min)*regular_payment
+            if(loan.balance <= loan.cur_payment) {
+              loan.cur_payment = loan.balance
+              loan.paid = true
+              new_payoffs = true
+            }
+          } else {
+            loan.cur_payment = null
+            loan.paid = true
+          }
+        })
+
+        regular_payment = payment - loans.reduce(function(sum, cur) {
+          return sum + (cur.paid ? cur.balance : 0)
+        }, 0)
+        sanity--
+      } while(new_payoffs && sanity)
+
       periods.push({
-        name: 'Period ' + i,
+        name: 'Period ' + period,
         loans: loans.map(function(loan) {
           return {
-            'principal': loan.min_payment*0.9,
-            'interest': loan.min_payment*0.1,
+            payment: loan.cur_payment,
+            balance: loan.balance - loan.cur_payment
           }
         })
       })
-    }
+
+      total_balance = 0
+      loans.forEach(function(loan) {
+        loan.balance*=(1+loan.interest_rate/12/100)
+        total_balance += loan.balance
+      })
+
+      period++
+    } while(total_balance > 0 && period < 100)
+
     return periods
   },
   render: function() {
     var loanPayments = this.calculatePayments(this.props.loans, this.props.payment).map(function(period) {
       var payments = period.loans.map(function(loan) {
         return (
-          <td>{loan.principal}/{loan.interest}</td>
+          <td>{loan.payment}/{loan.balance}</td>
         )
       })
       return (
