@@ -86,6 +86,7 @@ var PlanGenerator = React.createClass({
     return (
       <div>
         <input type="text" value={this.state.payment} onChange={this.updatePayment}/>
+        <p>It will take you <b>{plan.length}</b> periods to be paid off</p>
         <table className="table">
           <PlanHeaders loans={this.props.loans}/>
           <PlanRows plan={plan}/>
