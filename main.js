@@ -82,12 +82,13 @@ var PlanGenerator = React.createClass({
     this.setState({payment: e.target.value})
   },
   render: function() {
+    var plan = loanCalc.calculatePayments(this.props.loans, this.state.payment)
     return (
       <div>
         <input type="text" value={this.state.payment} onChange={this.updatePayment}/>
-        <table>
+        <table className="table">
           <PlanHeaders loans={this.props.loans}/>
-          <PlanRows loans={this.props.loans} payment={this.state.payment}/>
+          <PlanRows plan={plan}/>
         </table>
       </div>
     )
@@ -114,7 +115,7 @@ var PlanHeaders = React.createClass({
 
 var PlanRows = React.createClass({
   render: function() {
-    var loanPayments = loanCalc.calculatePayments(this.props.loans, this.props.payment).map(function(period) {
+    var loanPayments = this.props.plan.map(function(period) {
       var payments = period.loans.map(function(loan) {
         return (
           <td>{loan.payment}/{loan.balance}</td>
