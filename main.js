@@ -72,7 +72,9 @@ var CSVInput = React.createClass({
 var PlanGenerator = React.createClass({
   getInitialState: function() {
     return {
-      payment: 0,
+      payment: this.props.loans.reduce(
+        function(sum, cur) { return sum + cur.min_payment }, 0
+      ),
     }
   },
   updatePayment: function(e) {
