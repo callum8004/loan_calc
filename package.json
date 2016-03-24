@@ -3,7 +3,8 @@
   "description": "A calculator for multiple loan repayment",
   "dependencies": {
     "react": "^0.14.7",
-    "react-dom": "^0.14.7"
+    "react-dom": "^0.14.7",
+    "react-localstorage": "^0.2.9"
   },
   "devDependencies": {
     "babel-core": "^6.7.4",

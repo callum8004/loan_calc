@@ -1,5 +1,6 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
+var LocalStorageMixin = require('react-localstorage');
 
 var Loan = React.createClass({
     render: function() {
@@ -64,6 +65,8 @@ var CSVInput = React.createClass({
 })
 
 var InputtableLoanList = React.createClass({
+    mixins: [LocalStorageMixin],
+
     getInitialState: function() {
       return {
         loans: []
