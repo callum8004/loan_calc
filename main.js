@@ -1,6 +1,6 @@
-var React = require('react');
-var ReactDOM = require('react-dom');
-var LocalStorageMixin = require('react-localstorage');
+var React = require('react')
+var ReactDOM = require('react-dom')
+var LocalStorageMixin = require('react-localstorage')
 var _ = require('lodash')
 var numeral = require('numeral')
 var loanCalc = require('./loancalc')
@@ -151,6 +151,7 @@ var InputtableLoanList = React.createClass({
     }
   },
   componentDidMount: function() {
+    var stored_state, parsed_state
     if(stored_state = localStorage.getItem("loan_state")) {
       if(parsed_state = JSON.parse(localStorage.getItem("loan_state"))) {
         this.setState(parsed_state)
