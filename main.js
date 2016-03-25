@@ -2,6 +2,7 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var LocalStorageMixin = require('react-localstorage');
 var _ = require('lodash')
+var numeral = require('numeral')
 var loanCalc = require('./loancalc')
 
 var Loan = React.createClass({
@@ -119,7 +120,11 @@ var PlanRows = React.createClass({
     var loanPayments = this.props.plan.map(function(period) {
       var payments = period.loans.map(function(loan) {
         return (
-          <td>{loan.payment}/{loan.balance}</td>
+          <td>
+            {numeral(loan.payment).format('$0,0.00')}
+              ->
+            {numeral(loan.balance).format('$0,0.00')}
+          </td>
         )
       })
       return (
