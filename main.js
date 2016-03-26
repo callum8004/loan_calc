@@ -4,6 +4,7 @@ var LocalStorageMixin = require('react-localstorage')
 var _ = require('lodash')
 var numeral = require('numeral')
 var loanCalc = require('./loancalc')
+var moment = require('moment')
 
 var Loan = React.createClass({
   render: function() {
@@ -99,6 +100,7 @@ var PlanGenerator = React.createClass({
     var plan = loanCalc.calculatePayments(this.props.loans, this.state.payment)
     return (
       <div>
+        Start Month: <input type="text" value={this.state.monthtext} onChange={this.updateMonth}/><br/>
         <input type="text" value={this.state.payment} onChange={this.updatePayment}/>
         <p>It will take you <b>{plan.length}</b> periods to be paid off</p>
         <table className="table">
