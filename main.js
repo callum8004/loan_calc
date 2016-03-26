@@ -30,6 +30,13 @@ var LoanTable = React.createClass({
         ></Loan>
       )
     })
+    var totals = this.props.loans.reduce(function(sums, loan) {
+      sums.balance += loan.balance
+      sums.interest_rate += loan.interest_rate*loan.balance
+      sums.min_payment += loan.min_payment
+      return sums
+    }, {balance: 0, interest_rate: 0, min_payment: 0})
+    if(totals.balance) { totals.interest_rate /= totals.balance }
     return (
       <table className="table loan_table">
         <thead>
@@ -42,6 +49,12 @@ var LoanTable = React.createClass({
         </thead>
         <tbody>
           {loanNodes}
+          <tr>
+            <th>Totals</th>
+            <th>{numeral(totals.balance).format('$0,0.00')}</th>
+            <th>{numeral(totals.interest_rate/100).format('0,0.00%')}</th>
+            <th>{numeral(totals.min_payment).format('$0,0.00')}</th>
+          </tr>
         </tbody>
       </table>
     )
